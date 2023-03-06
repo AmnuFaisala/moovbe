@@ -17,6 +17,10 @@ class DriverList extends StatefulWidget {
 
 class _DriverListState extends State<DriverList> {
 
+  String drivercount = " ";
+  _DriverListState(){
+    inview();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +31,10 @@ class _DriverListState extends State<DriverList> {
         ),
         body:Stack(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text('$drivercount Buses Found',style: TextStyle(fontSize: 16), ),
+            ),
             Container(
               padding: EdgeInsets.all(5.0),
               child: FutureBuilder(
@@ -46,7 +54,7 @@ class _DriverListState extends State<DriverList> {
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(onTap: (){},
                             child: Padding(
-                              padding: const EdgeInsets.only(left:8.0,right: 8,top: 25),
+                              padding: const EdgeInsets.only(left:8.0,right: 8,top: 40),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -135,7 +143,12 @@ class _DriverListState extends State<DriverList> {
 
     var jsonData = json.decode(data.body.toString());
     print(jsonData);
-    // print("staaattusssee");
+
+    drivercount = jsonData['count'].toString();
+    setState(() {
+      drivercount=jsonData['count'].toString();
+    });
+
     print(jsonData["status"]);
     // print(jsonData);
     List<driverview> view_data = [];

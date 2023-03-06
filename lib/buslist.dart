@@ -142,7 +142,11 @@ class _BusListState extends State<BusList> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(top:225.0),
+            padding: const EdgeInsets.only(top:220.0,left: 25),
+            child: Text('$buscount Buses Found',style: TextStyle(fontSize: 16), ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:240.0),
             child: Container(
               padding: EdgeInsets.all(5.0),
               child: FutureBuilder(
@@ -178,7 +182,6 @@ class _BusListState extends State<BusList> {
                                       children: [
                                         Text(snapshot.data[index].bus_name.toString()),
                                             Text(snapshot.data[index].bus_model.toString(),style: TextStyle(fontSize: 12),),
-                                        Text(buscount),
                                       ]
                                   ),
                                     trailing: ElevatedButton(onPressed: (){},
