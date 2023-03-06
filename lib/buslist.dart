@@ -42,7 +42,10 @@ class BusList extends StatefulWidget {
 }
 
 class _BusListState extends State<BusList> {
-
+ String buscount = " ";
+  _BusListState(){
+    inview();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,36 +156,39 @@ class _BusListState extends State<BusList> {
                         ),
                       );
                     } else {
-                      return ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(onTap: (){},
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: ListTile(
-                                // onLongPress: () {
-                                //
-                                // },
-                                leading:Container(
-                                  color: Color(0xFFEBEDEF),
-                                    child: Image.asset("assets/images/bus.png")),
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(snapshot.data[index].bus_name.toString()),
-                                          Text(snapshot.data[index].bus_model.toString(),style: TextStyle(fontSize: 12),),
-                                    ]
+                      return Container(
+                        child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(onTap: (){},
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                  trailing: ElevatedButton(onPressed: (){},
-                                  child: Text("Manage",style: GoogleFonts.poppins(color: Colors.white,fontSize: 12),)
+                                child: ListTile(
+                                  // onLongPress: () {
+                                  //
+                                  // },
+                                  leading:Container(
+                                    color: Color(0xFFEBEDEF),
+                                      child: Image.asset("assets/images/bus.png")),
+                                  title: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(snapshot.data[index].bus_name.toString()),
+                                            Text(snapshot.data[index].bus_model.toString(),style: TextStyle(fontSize: 12),),
+                                        Text(buscount),
+                                      ]
                                   ),
-                                ),
-                            ),
-                          );
-                        },
+                                    trailing: ElevatedButton(onPressed: (){},
+                                    child: Text("Manage",style: GoogleFonts.poppins(color: Colors.white,fontSize: 12),)
+                                    ),
+                                  ),
+                              ),
+                            );
+                          },
+                        ),
                       );
                     }
                   }),
@@ -195,14 +201,15 @@ class _BusListState extends State<BusList> {
   Future<List<userview>>inview() async{
     final pref = await SharedPreferences.getInstance();
     String ip = pref.getString("IP").toString();
-    // print("ip");
-    // print(ip);
     var data = await http.post(Uri.parse("http://" + ip + ":3500/view_buslist"));
-    // print(ip);
-    // print(data);
-    // print("checking........");
+      var jsonData = json.decode(data.body.toString());
 
-    var jsonData = json.decode(data.body.toString());
+     buscount = jsonData['count'].toString();
+    setState(() {
+      buscount=jsonData['count'].toString();
+    });
+
+
     print(jsonData);
     // print("staaattusssee");
     print(jsonData["status"]);
@@ -211,7 +218,7 @@ class _BusListState extends State<BusList> {
     for (var i in jsonData["data"]) {
       userview sg = userview(i["id"].toString(),i["bus_model"].toString(),i["bus_name"].toString(),i["bus_number"].toString(),i["bus_time"].toString());
       view_data.add(sg);
-      print("length  : ${view_data.length}");
+      // print("length  : ${view_data.length}");
 
     // print(view_data);
     }
